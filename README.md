@@ -1,4 +1,4 @@
-LabPocket 
+LabPocket
 A Mobile-First MicroPython Helper for Low-Bandwidth Networks
 Project Code: B-CODE-06
 
