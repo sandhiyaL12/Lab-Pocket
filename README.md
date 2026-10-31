@@ -2,6 +2,7 @@ LabPocket
 A Mobile-First MicroPython Helper for Low-Bandwidth Networks
 Project Code: B-CODE-06
 
+
 LabPocket is a lightweight, mobile-friendly assistant designed to help electronics students quickly find accurate MicroPython code, pin information, module support, and board-specific functions. It is optimized for college laboratories where students use smartphones and have slow or crowded Wi-Fi connections.
 Problem Statement
 Students learning MicroPython with ESP32 and Raspberry Pi Pico boards often struggle to find reliable technical information. Heavy documentation websites load slowly on weak networks, and students may accidentally use code or pin configurations intended for a different microcontroller board.
