@@ -124,3 +124,10 @@ Target Users
 - Developers experimenting with ESP32 and Raspberry Pi Pico.
 Project Summary
 LabPocket aims to make MicroPython learning faster and more accessible by combining board-specific source retrieval, technical fact-checking, and a low-bandwidth mobile interface. Its primary goal is to help students obtain concise, reliable answers even when college internet connectivity is poor.
+
+
+## Live Deployment
+
+- **Backend:** https://lab-pocket-1.onrender.com
+- **API Documentation:** https://lab-pocket-1.onrender.com/docs
+- **Health Check:** https://lab-pocket-1.onrender.com/health
