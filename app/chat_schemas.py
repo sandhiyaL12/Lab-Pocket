@@ -1,12 +1,12 @@
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class ChatRequest(BaseModel):
     board: str = Field(
         ...,
         min_length=1,
-        description="MicroPython board name"
+        description="Supported boards: ESP32, Raspberry Pi Pico"
     )
 
     question: str = Field(
@@ -14,6 +14,23 @@ class ChatRequest(BaseModel):
         min_length=3,
         description="User's technical question"
     )
+
+    @field_validator("board")
+    @classmethod
+    def validate_board(cls, value):
+        supported_boards = {
+            "esp32": "ESP32",
+            "raspberry pi pico": "Raspberry Pi Pico",
+        }
+
+        normalized = " ".join(value.split()).casefold()
+
+        if normalized not in supported_boards:
+            raise ValueError(
+                "Unsupported board. Choose ESP32 or Raspberry Pi Pico."
+            )
+
+        return supported_boards[normalized]
 
 
 class ChatResponse(BaseModel):
