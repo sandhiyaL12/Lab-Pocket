@@ -1,22 +1,22 @@
 # Progress
 
-Commit after every class. Tag every Friday: `git tag week-N && git push origin week-N`.
+## Week 1
+- [x] Repository exists and README describes the project card
+- [ ] Registration on the external form (not verifiable from this repository)
+- [x] `/health` is covered by a local API test
+- [x] `docs/QUESTIONS.md` has 10 questions, source references, and an unanswerable question
+- [x] Dataset metadata is recorded; 248 reStructuredText documentation files and a four-file sample are present
+- [ ] Push the `week-1` tag after committing the completed work
 
-## Week 1 (tag week-1 by Fri 23 Oct)
-- [ ] Repo created from the Examate template and registered on the form
-- [ ] README top section filled from my project card
-- [ ] /health runs locally
-- [ ] docs/QUESTIONS.md: 10 real questions
-- [ ] 50+ pages collected, DATASET.md filled, sample in data/sample/
-- [ ] Tag week-1 pushed
-
-## Week 2 (tag week-2 by Fri 30 Oct)
-- [ ] POST /chat calls an LLM and returns structured JSON
-- [ ] Streaming, timeouts, retry and a fallback model
-- [ ] Cost log + GET /usage
-- [ ] Docker Compose (API + Postgres/pgvector) runs
-- [ ] CI green, live link in README
-- [ ] Tag week-2 pushed
+## Week 2
+- [x] `POST /chat` calls the configured provider and returns structured JSON
+- [x] Streaming, timeouts, transient retries, and primary/fallback behavior have tests
+- [x] Cost JSONL logging and `GET /usage` report tokens and configured-price estimates
+- [ ] Run API + PostgreSQL/pgvector with Docker Compose (configuration validates; Docker Engine was unavailable for a runtime check)
+- [x] CI workflow is configured; its lint, tests, and Compose-config checks pass locally
+- [ ] Verify a green GitHub Actions run and add a real deployed URL (neither is verified yet)
+- [x] `DESIGN.md` documents the current API and database limitation
+- [ ] Push the `week-2` tag after committing the completed work
 
 ## Week 3 (tag week-3 by Fri 6 Nov)
 - [ ] Parser keeps page numbers and headings
