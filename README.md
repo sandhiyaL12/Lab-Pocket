@@ -98,6 +98,7 @@ tokens, and cost based on configured prices.
 ruff check app tests
 python -m pytest -q
 docker compose -f docker_compose.yml config -q
+pre-commit run --all-files
 ```
 
 ## Dataset and licensing
