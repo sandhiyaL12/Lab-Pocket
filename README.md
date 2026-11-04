@@ -1,3 +1,4 @@
+
 # Lab-Pocket
 
 **A Mobile-First MicroPython Helper for ECE Labs on Low-Bandwidth Networks**
@@ -99,3 +100,181 @@ Lab-Pocket/
 ├── pyproject.toml
 ├── .dockerignore
 └── README.md
+```
+
+## Installation and Setup
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/sandhiyaL12/Lab-Pocket.git
+cd Lab-Pocket
+```
+
+### 2. Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+### 3. Activate Virtual Environment
+
+Windows PowerShell:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+### 4. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 5. Configure Gemini API
+
+Create a `.env` file in the project root directory.
+
+Add the following configuration:
+
+```env
+PRIMARY_API_KEY=your_gemini_api_key
+PRIMARY_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
+PRIMARY_MODEL=your_configured_model
+```
+
+Replace the placeholders with your actual Gemini API key and configured model.
+
+**Security:** Never upload your `.env` file or API keys to GitHub.
+
+### 6. Run the Application
+
+```bash
+uvicorn app.main:app --reload
+```
+
+## API Documentation
+
+After starting the application, open:
+
+- **Swagger UI:** http://127.0.0.1:8000/docs
+- **Health Check:** http://127.0.0.1:8000/health
+
+### Chat API
+
+**Method:** POST
+
+**Endpoint:** `/chat`
+
+Example request:
+
+```json
+{
+  "board": "ESP32",
+  "question": "How does PWM work?"
+}
+```
+
+## Live Deployment – Render
+
+Lab-Pocket backend is deployed on Render.
+
+| Resource | Link |
+|---|---|
+| Live API | [Open Live API](https://lab-pocket-new.onrender.com) |
+| Swagger API Documentation | [Open API Docs](https://lab-pocket-new.onrender.com/docs) |
+| Health Check | [Check API Health](https://lab-pocket-new.onrender.com/health) |
+
+### Test the Live Deployment
+
+1. Open the [Lab-Pocket Live API](https://lab-pocket-new.onrender.com).
+2. Open the [Swagger API Documentation](https://lab-pocket-new.onrender.com/docs).
+3. Find the `POST /chat` endpoint.
+4. Click **Try it out**.
+5. Enter the following request:
+
+```json
+{
+  "board": "ESP32",
+  "question": "How does PWM work?"
+}
+```
+
+6. Click **Execute** to test the API.
+7. Check the response displayed by Swagger UI.
+
+## Docker Setup
+
+### Build Docker Image
+
+```bash
+docker build -t lab-pocket .
+```
+
+### Run Docker Compose
+
+```bash
+docker compose up -d --build
+```
+
+### Check Running Containers
+
+```bash
+docker compose ps
+```
+
+### View Logs
+
+```bash
+docker compose logs -f
+```
+
+### Stop Containers
+
+```bash
+docker compose down
+```
+
+## Testing
+
+### Run Automated Tests
+
+```bash
+python -m pytest -q
+```
+
+### Check Code Quality
+
+```bash
+ruff check .
+```
+
+### Check Formatting
+
+```bash
+ruff format --check .
+```
+
+### Run Pre-commit
+
+```bash
+pre-commit run --all-files
+```
+
+## Future Enhancements
+
+- Develop a mobile-friendly chatbot interface.
+- Add MicroPython documentation retrieval.
+- Improve ESP32 and Raspberry Pi Pico support.
+- Add verified code examples.
+- Optimize API responses for low-bandwidth networks.
+- Implement Retrieval-Augmented Generation (RAG).
+- Add source-grounded answers.
+
+## GitHub Repository
+
+[Lab-Pocket – GitHub](https://github.com/sandhiyaL12/Lab-Pocket)
+
+## Live Application
+
+[Lab-Pocket – Render](https://lab-pocket-new.onrender.com)
