@@ -1,111 +1,285 @@
-# LabPocket
+# Lab-Pocket
 
-**A phone-friendly MicroPython helper for ECE labs on slow or crowded Wi-Fi.**
+**A Mobile-First MicroPython Helper for ECE Labs on Low-Bandwidth Networks**
 
-Project code: **B-CODE-06** · Repository:
-[sandhiyaL12/Lab-Pocket](https://github.com/sandhiyaL12/Lab-Pocket)
+[![GitHub](https://img.shields.io/badge/GitHub-Lab--Pocket-blue?logo=github)](https://github.com/sandhiyaL12/Lab-Pocket)
 
-LabPocket is for ECE students and instructors learning MicroPython on ESP32
-and Raspberry Pi Pico (RP2) boards. It provides a small API for board-selected
-questions, with compressed JSON, plain-text answers, and server-sent streaming.
+## Project Overview
 
-## What is in this project now
+Lab-Pocket is an AI-powered MicroPython assistant designed to help ECE students and lab instructors working with ESP32 and Raspberry Pi Pico boards.
 
-- FastAPI endpoints: `/health`, `/chat`, `/chat/stream`, and `/usage`.
-- Board input validation for ESP32 and Pico/RP2 aliases.
-- OpenAI-compatible primary and fallback LLM providers, timeouts, retries,
-  token/cost logging, and configurable prices.
-- GZip compression for HTTP responses and `POST /chat?text_only=true`.
-- Dockerfile, Docker Compose API + pgvector/PostgreSQL services, and CI tests.
-- MicroPython `v1.29.0` source corpus collected under `data/raw/` (kept out of
-  Git) and a small sample under `data/sample/`.
-- Ten real lab questions with source-file references in [docs/QUESTIONS.md](docs/QUESTIONS.md).
+It provides a lightweight API for answering board-specific MicroPython questions, especially in environments with slow or crowded internet connections.
 
-## Important current limitation
+## Problem Statement
 
-The source corpus is collected but is **not yet indexed or connected to the
-chat endpoint**. The LLM answers are not source-verified and do not yet include
-citations. Source retrieval, per-port filtering of evidence, fact-checking, and
-comparison tables are the next project phase. Do not treat generated answers
-as verified MicroPython documentation.
+ECE students often face difficulty finding correct MicroPython functions, pin configurations, and code examples while working in college laboratories. Slow Wi-Fi makes accessing large documentation websites inconvenient.
 
-Responses are capped below 5 KB (including oversized answers, which are marked
-as shortened) and the limit is covered by local tests. The under-3-second
-first-token goal has not yet been measured on a throttled 2G-like link, and
-this repository does not currently have a verified live-host URL.
+Lab-Pocket aims to provide a simple and lightweight solution for these problems.
 
-## Run locally
+## Target Users
 
-Requires Python 3.11+.
+- ECE and EEE students
+- Polytechnic students
+- Embedded systems beginners
+- College lab instructors
+- ESP32 and Raspberry Pi Pico developers
 
-```powershell
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements-dev.txt
-Copy-Item .env.example .env
+## Key Features
+
+- FastAPI-based backend.
+- Google Gemini API integration.
+- Board-specific chat questions.
+- ESP32 and Raspberry Pi Pico support.
+- REST API endpoints.
+- Interactive Swagger API documentation.
+- Health monitoring endpoint.
+- Docker support.
+- Render cloud deployment.
+- Designed for low-bandwidth environments.
+
+## Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| Python 3.12 | Backend programming |
+| FastAPI | API development |
+| Google Gemini | AI integration |
+| Docker | Containerization |
+| Pytest | Automated testing |
+| Ruff | Code quality |
+| Git & GitHub | Version control |
+| GitHub Actions | Continuous integration |
+| Render | Cloud deployment |
+
+## Dataset Sources
+
+- [Official MicroPython Repository](https://github.com/micropython/micropython)
+- [MicroPython Documentation](https://docs.micropython.org/)
+- [ESP32 Documentation](https://docs.micropython.org/en/latest/esp32/quickref.html)
+- [Raspberry Pi Pico Documentation](https://docs.micropython.org/en/latest/rp2/quickref.html)
+- [STM32 MicroPython Documentation](https://docs.micropython.org/en/latest/stm32/quickref.html)
+
+## Sample User Questions
+
+1. How does PWM work in ESP32?
+2. How do I configure GPIO pins?
+3. How can I read an analog sensor?
+4. How do I connect an LED?
+5. How does I2C communication work?
+6. How do I use UART communication?
+7. How can I connect a temperature sensor?
+8. How do I control a servo motor?
+9. How do I use interrupts in MicroPython?
+10. How can I upload MicroPython code to Raspberry Pi Pico?
+
+## Project Structure
+
+```text
+Lab-Pocket/
+│
+├── app/
+│   ├── main.py
+│   └── ...
+│
+├── docs/
+│   └── QUESTIONS.md
+│
+├── tools/
+│   └── download.py
+│
+├── tests/
+│
+├── .github/
+│   └── workflows/
+│
+├── Dockerfile
+├── docker_compose.yml
+├── requirements.txt
+├── requirements-dev.txt
+├── pyproject.toml
+├── .dockerignore
+└── README.md
 ```
 
-Set `PRIMARY_API_KEY` in `.env` to a key for an OpenAI-compatible endpoint. The
-fallback is optional; configure its key, URL, and model to enable it. Set the
-cost-per-million-token values to the current provider prices or `/usage` will
-report a zero estimate.
+## Installation and Setup
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/sandhiyaL12/Lab-Pocket.git
+cd Lab-Pocket
+```
+
+### 2. Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+### 3. Activate Virtual Environment
+
+Windows PowerShell:
 
 ```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+### 4. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 5. Configure Gemini API
+
+Create a `.env` file in the project root directory.
+
+Add the following configuration:
+
+```env
+PRIMARY_API_KEY=your_gemini_api_key
+PRIMARY_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
+PRIMARY_MODEL=your_configured_model
+```
+
+Replace the placeholders with your actual Gemini API key and configured model.
+
+**Security:** Never upload your `.env` file or API keys to GitHub.
+
+### 6. Run the Application
+
+```bash
 uvicorn app.main:app --reload
 ```
 
-The API is available at `http://127.0.0.1:8000`; interactive API documentation
-is at `/docs`.
+## API Documentation
 
-## Run with Docker Compose
+After starting the application, open:
 
-The Compose file starts both the API and a pgvector-enabled PostgreSQL service.
-The API does not use the database yet; it is provisioned for a later retrieval
-phase. The default database password is for local development only.
+- **Swagger UI:** http://127.0.0.1:8000/docs
+- **Health Check:** http://127.0.0.1:8000/health
 
-```powershell
-docker compose -f docker_compose.yml up --build
+### Chat API
+
+**Method:** POST
+
+**Endpoint:** `/chat`
+
+Example request:
+
+```json
+{
+  "board": "ESP32",
+  "question": "How does PWM work?"
+}
 ```
 
-Set secrets through `.env`; do not commit that file. Check liveness at
-`http://localhost:8000/health`.
+## Live Deployment – Render
 
-## Example requests
+Lab-Pocket backend is deployed on Render.
 
-Structured JSON:
+| Resource | Link |
+|---|---|
+| Live API | [Open Live API](https://lab-pocket-new.onrender.com) |
+| Swagger API Documentation | [Open API Docs](https://lab-pocket-new.onrender.com/docs) |
+| Health Check | [Check API Health](https://lab-pocket-new.onrender.com/health) |
 
-```powershell
-Invoke-RestMethod -Method Post -Uri http://localhost:8000/chat `
-  -ContentType 'application/json' `
-  -Body '{"board":"ESP32","question":"How does machine.Pin work?"}'
+### Test the Live Deployment
+
+1. Open the [Lab-Pocket Live API](https://lab-pocket-new.onrender.com).
+2. Open the [Swagger API Documentation](https://lab-pocket-new.onrender.com/docs).
+3. Find the `POST /chat` endpoint.
+4. Click **Try it out**.
+5. Enter the following request:
+
+```json
+{
+  "board": "ESP32",
+  "question": "How does PWM work?"
+}
 ```
 
-Plain text:
+6. Click **Execute** to test the API.
+7. Check the response displayed by Swagger UI.
 
-```powershell
-Invoke-WebRequest -Method Post -Uri 'http://localhost:8000/chat?text_only=true' `
-  -ContentType 'application/json' `
-  -Body '{"board":"Pico","question":"How do I use hardware PWM?"}'
+## Docker Setup
+
+### Build Docker Image
+
+```bash
+docker build -t lab-pocket .
 ```
 
-Streaming clients can `POST` the same JSON body to `/chat/stream` and consume
-SSE `token`, `done`, and `error` events. `/usage` reports logged requests,
-tokens, and cost based on configured prices.
+### Run Docker Compose
 
-## Checks
+```bash
+docker compose -f docker_compose.yml up -d --build
+```
 
-```powershell
-ruff check app tests
+### Check Running Containers
+
+```bash
+docker compose -f docker_compose.yml ps
+```
+
+### View Logs
+
+```bash
+docker compose -f docker_compose.yml logs -f
+```
+
+### Stop Containers
+
+```bash
+docker compose -f docker_compose.yml down
+```
+
+## Testing
+
+### Run Automated Tests
+
+```bash
 python -m pytest -q
-docker compose -f docker_compose.yml config -q
+```
+
+### Check Code Quality
+
+```bash
+ruff check .
+```
+
+### Check Formatting
+
+```bash
+ruff format --check .
+```
+
+### Run Pre-commit
+
+```bash
 pre-commit run --all-files
 ```
 
-## Dataset and licensing
+## Future Enhancements
 
-MicroPython source is from the upstream
-[MicroPython repository](https://github.com/micropython/micropython) and is
-distributed under the MIT license. Keep upstream notices when using or
-redistributing its source. Dataset paths and scope are documented in
-[DATASET.md](DATASET.md); system endpoints and response shapes are in
-[DESIGN.md](DESIGN.md).
+- Develop a mobile-friendly chatbot interface.
+- Add MicroPython documentation retrieval.
+- Improve ESP32 and Raspberry Pi Pico support.
+- Add verified code examples.
+- Optimize API responses for low-bandwidth networks.
+- Implement Retrieval-Augmented Generation (RAG).
+- Add source-grounded answers.
+
+## GitHub Repository
+
+[Lab-Pocket – GitHub](https://github.com/sandhiyaL12/Lab-Pocket)
+
+## Live Application
+
+[Lab-Pocket – Render](https://lab-pocket-new.onrender.com)
+
+## Deployment (Render)
+
+- **Live Application:** https://lab-pocket-new.onrender.com
+- **API Documentation:** https://lab-pocket-new.onrender.com/docs
+- **Health Check:** https://lab-pocket-new.onrender.com/health
