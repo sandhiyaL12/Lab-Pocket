@@ -1,4 +1,3 @@
-
 # Lab-Pocket
 
 **A Mobile-First MicroPython Helper for ECE Labs on Low-Bandwidth Networks**
@@ -214,25 +213,25 @@ docker build -t lab-pocket .
 ### Run Docker Compose
 
 ```bash
-docker compose up -d --build
+docker compose -f docker_compose.yml up -d --build
 ```
 
 ### Check Running Containers
 
 ```bash
-docker compose ps
+docker compose -f docker_compose.yml ps
 ```
 
 ### View Logs
 
 ```bash
-docker compose logs -f
+docker compose -f docker_compose.yml logs -f
 ```
 
 ### Stop Containers
 
 ```bash
-docker compose down
+docker compose -f docker_compose.yml down
 ```
 
 ## Testing
@@ -278,3 +277,9 @@ pre-commit run --all-files
 ## Live Application
 
 [Lab-Pocket – Render](https://lab-pocket-new.onrender.com)
+
+## Deployment (Render)
+
+- **Live Application:** https://lab-pocket-new.onrender.com
+- **API Documentation:** https://lab-pocket-new.onrender.com/docs
+- **Health Check:** https://lab-pocket-new.onrender.com/health
