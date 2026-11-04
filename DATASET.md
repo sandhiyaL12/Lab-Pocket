@@ -1,23 +1,30 @@
 # Dataset
 
+LabPocket's source corpus is a local checkout of the official
+[MicroPython repository](https://github.com/micropython/micropython), release
+`v1.29.0`, commit `0fd6c573ea815774668bbb16b8e197c8822368b2` (MIT-licensed).
+It includes the shared interpreter, documentation,
+examples, and ports including ESP32 and RP2.
 
-| File | Source URL | Pages | Licence / terms | Downloaded on |
-|------|------------|-------|-----------------|---------------|
-| Core interpreter: `py/` (tag: shared) | https://github.com/micropython/micropython/tree/v1.29.0/py | all files in folder | MIT | 23-10-2026 |
-| Shared modules: `extmod/`, `shared/`, `drivers/` (tag: shared) | https://github.com/micropython/micropython/tree/v1.29.0/extmod | all files in folders | MIT | 23-10-2026 |
-| ESP32 port: `ports/esp32/` incl. `boards/` (tag: esp32) | https://github.com/micropython/micropython/tree/v1.29.0/ports/esp32 | all files in folder | MIT | 23-10-2026 |
-| RP2 / Pico port: `ports/rp2/` incl. `boards/` (tag: rp2) | https://github.com/micropython/micropython/tree/v1.29.0/ports/rp2 | all files in folder | MIT | 23-10-2026 |
-| Other ports: `ports/stm32`, `nrf`, `samd`, `mimxrt`, `zephyr`, `unix` | https://github.com/micropython/micropython/tree/v1.29.0/ports | all files in folders | MIT | 23-10-2026 |
-| Docs: `docs/` | https://github.com/micropython/micropython/tree/v1.29.0/docs | all files in folder | MIT | 23-10-2026 |
-| Tests and examples: `tests/`, `examples/` | https://github.com/micropython/micropython/tree/v1.29.0/tests | all files in folders | MIT | 23-10-2026 |
-| Tools and libs: `tools/`, `mpy-cross/`, `lib/` | https://github.com/micropython/micropython/tree/v1.29.0/tools | all files in folders | MIT | 23-10-2026 |
+| Collection | Source path | Use |
+|---|---|---|
+| Core interpreter | `py/`, `shared/`, `extmod/` | Shared runtime and modules |
+| ESP32 | `ports/esp32/`, `docs/esp32/` | ESP32 implementation and board guidance |
+| RP2 / Pico | `ports/rp2/`, `docs/rp2/` | RP2040 implementation and board guidance |
+| Other ports | `ports/` | Cross-port comparison |
+| Documentation | `docs/` | API and port reference |
+| Tests and examples | `tests/`, `examples/` | Usage examples and implementation checks |
 
-**Total:** 5,755 files copied to `data/raw/` (before filtering to text/source types).
+The local corpus contains 5,756 repository files, exceeding the project's
+4,300-file collection target. It also contains 248 reStructuredText (`.rst`)
+documentation pages. Its contents are kept out of Git; a small sample of four
+source/license files is in `data/sample/`. Documentation uses source files and
+headings rather than fixed page numbers. See
+[docs/QUESTIONS.md](docs/QUESTIONS.md) for question-to-source references.
 
-**Version:** MicroPython release tag `v1.29.0`, commit `0fd6c573ea815774668bbb16b8e197c8822368b2`.
+MicroPython source files retain their upstream copyright and license notices.
+The upstream license is included as `data/sample/LICENSE`.
 
-**Board tags:** every file is tagged `esp32`, `rp2` or `shared`. The board filter shows `esp32` + `shared`, or `rp2` + `shared`.
-
-**Licence note:** MicroPython is MIT licensed. The licence notice is kept in `data/sample/LICENSE`.
-
-Full data lives in `data/raw/` (not committed). A 3-file sample is in `data/sample/`.
+**Current scope:** the collected corpus is not yet indexed or connected to
+`POST /chat`. Until retrieval and citations are implemented, LLM answers are
+not source-verified. That work belongs to the next project phase.

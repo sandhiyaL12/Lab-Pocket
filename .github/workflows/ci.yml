@@ -9,5 +9,6 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
-      - run: ruff check .
+      - run: ruff check app tests
       - run: python -m pytest -q
+      - run: docker compose -f docker_compose.yml config -q

@@ -1,0 +1,50 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      APP_NAME: ${APP_NAME:-Lab-Pocket}
+      ENVIRONMENT: ${ENVIRONMENT:-local}
+      PRIMARY_API_KEY: ${PRIMARY_API_KEY:-}
+      PRIMARY_BASE_URL: ${PRIMARY_BASE_URL:-https://api.openai.com/v1}
+      PRIMARY_MODEL: ${PRIMARY_MODEL:-gpt-4o-mini}
+      FALLBACK_API_KEY: ${FALLBACK_API_KEY:-}
+      FALLBACK_BASE_URL: ${FALLBACK_BASE_URL:-https://api.openai.com/v1}
+      FALLBACK_MODEL: ${FALLBACK_MODEL:-}
+      TIMEOUT_SECONDS: ${TIMEOUT_SECONDS:-30}
+      LLM_MAX_RETRIES: ${LLM_MAX_RETRIES:-1}
+      LLM_RETRY_DELAY_SECONDS: ${LLM_RETRY_DELAY_SECONDS:-0.25}
+      LLM_MAX_OUTPUT_TOKENS: ${LLM_MAX_OUTPUT_TOKENS:-700}
+      PRIMARY_INPUT_COST_PER_MILLION: ${PRIMARY_INPUT_COST_PER_MILLION:-0}
+      PRIMARY_OUTPUT_COST_PER_MILLION: ${PRIMARY_OUTPUT_COST_PER_MILLION:-0}
+      FALLBACK_INPUT_COST_PER_MILLION: ${FALLBACK_INPUT_COST_PER_MILLION:-0}
+      FALLBACK_OUTPUT_COST_PER_MILLION: ${FALLBACK_OUTPUT_COST_PER_MILLION:-0}
+      COST_LOG_PATH: ${COST_LOG_PATH:-data/cost_log.jsonl}
+    ports:
+      - "${PORT:-8000}:8000"
+    volumes:
+      - api_data:/app/data
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-labpocket}
+      POSTGRES_USER: ${POSTGRES_USER:-labpocket}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-labpocket-local}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  api_data:
+  postgres_data:
