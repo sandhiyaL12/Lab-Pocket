@@ -112,6 +112,41 @@ class Settings(BaseSettings):
         validation_alias="COST_LOG_PATH",
     )
 
+    database_url: str = Field(
+        default="postgresql://labpocket:labpocket-local@localhost:5432/labpocket",
+        validation_alias="DATABASE_URL",
+    )
+
+    embedding_api_key: str | None = Field(default=None, validation_alias="EMBEDDING_API_KEY")
+
+    embedding_base_url: str | None = Field(default=None, validation_alias="EMBEDDING_BASE_URL")
+
+    embedding_model: str = Field(
+        default="text-embedding-3-small",
+        validation_alias="EMBEDDING_MODEL",
+    )
+
+    embedding_dimensions: int = Field(
+        default=1536,
+        ge=1,
+        le=16000,
+        validation_alias="EMBEDDING_DIMENSIONS",
+    )
+
+    embedding_max_retries: int = Field(default=5, ge=0, le=8, validation_alias="EMBEDDING_MAX_RETRIES")
+
+    embedding_retry_delay_seconds: float = Field(
+        default=1,
+        ge=0,
+        validation_alias="EMBEDDING_RETRY_DELAY_SECONDS",
+    )
+
+    embedding_request_delay_seconds: float = Field(
+        default=1,
+        ge=0,
+        validation_alias="EMBEDDING_REQUEST_DELAY_SECONDS",
+    )
+
 
 @lru_cache
 def get_settings() -> Settings:

@@ -19,10 +19,10 @@
 - [ ] Push the `week-2` tag after committing the completed work
 
 ## Week 3 (tag week-3 by Fri 6 Nov)
-- [ ] Parser keeps page numbers and headings
-- [ ] 500+ pages chunked, embedded and stored in pgvector
-- [ ] POST /ask answers with [document, page] citations
-- [ ] docs/EVAL_v0.md with my 10 questions scored
+- [x] Parser keeps section page indexes and headings; source docs have no fixed page numbers
+- [ ] 500+ source sections chunked, embedded and stored in pgvector (ingestion code is ready; database run not verified)
+- [x] POST /ask retrieves indexed context and returns document/page/section citations (live retrieval not verified)
+- [ ] docs/EVAL_v0.md with the 10 README questions scored (questions recorded; execution/scoring pending)
 - [ ] Tag week-3 pushed
 
 ## Daily log

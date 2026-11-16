@@ -174,6 +174,26 @@ Example request:
 }
 ```
 
+### Retrieval API
+
+`POST /ask` retrieves indexed MicroPython source sections and returns an answer with document, page, and section citations. The page number is a section index within the source file because the source corpus is not paginated.
+
+```json
+{
+  "board": "ESP32",
+  "question": "How do I configure a GPIO pin?"
+}
+```
+
+The API requires PostgreSQL with pgvector and an OpenAI-compatible embeddings endpoint. Set `DATABASE_URL`, `EMBEDDING_API_KEY`, `EMBEDDING_BASE_URL`, `EMBEDDING_MODEL`, and `EMBEDDING_DIMENSIONS` in `.env`. Embedding dimensions must match the selected model and the database vector column.
+
+Start the services and index the local MicroPython checkout:
+
+```bash
+docker compose -f docker_compose.yml up -d --build
+docker compose -f docker_compose.yml exec api python -m app.ingest /app/data/raw
+```
+
 ## Live Deployment – Render
 
 Lab-Pocket backend is deployed on Render.

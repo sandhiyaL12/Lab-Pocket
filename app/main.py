@@ -13,6 +13,8 @@ from app.chat_schemas import ChatRequest, ChatResponse, UsageResponse
 from app.config import Settings, get_settings
 from app.cost import log_call
 from app.llm import generate_answer, generate_answer_stream
+from app.retrieval import retrieve_chunks
+from app.schemas import AskResponse
 
 logger = logging.getLogger(__name__)
 MAX_CHAT_RESPONSE_BYTES = 4999
@@ -118,6 +120,59 @@ async def chat(
     )
     if text_only:
         return PlainTextResponse(response.answer)
+    return response
+
+
+@app.post("/ask", response_model=AskResponse)
+async def ask(request: ChatRequest, settings: SettingsDep, top_k: int = 5):
+    if not 1 <= top_k <= 10:
+        raise HTTPException(status_code=422, detail="top_k must be between 1 and 10.")
+    try:
+        chunks = await retrieve_chunks(settings, request.question, top_k)
+    except (RuntimeError, ValueError) as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
+    if not chunks:
+        raise HTTPException(status_code=404, detail="No indexed source content is available.")
+
+    context = "\n\n".join(
+        f"[Source: {chunk['source']}, page {chunk['page']}, section: {chunk['heading'] or 'body'}]\n"
+        f"{chunk['content']}"
+        for chunk in chunks
+    )
+    prompt = (
+        f"Answer using only the source excerpts below. Cite each factual claim using [document, page] "
+        f"with the exact source path and page number shown. If the excerpts do not answer the question, "
+        f"say so.\n\nQuestion: {request.question}\n\nSource excerpts:\n{context}"
+    )
+    start_time = time.perf_counter()
+    try:
+        result = await generate_answer(settings=settings, board=request.board, question=prompt)
+    except RuntimeError as error:
+        raise HTTPException(status_code=502, detail=str(error)) from error
+
+    latency_ms = (time.perf_counter() - start_time) * 1000
+    input_tokens = result.get("input_tokens", 0)
+    output_tokens = result.get("output_tokens", 0)
+    log_call(
+        settings.cost_log_path,
+        provider=result["provider"],
+        model=result["model_used"],
+        usage={"input_tokens": input_tokens, "output_tokens": output_tokens},
+        latency_ms=latency_ms,
+        price_in_per_m=result["input_cost_per_million"],
+        price_out_per_m=result["output_cost_per_million"],
+        ok=True,
+        fallback_used=result["provider"] == "fallback",
+    )
+    response = AskResponse(
+        board=request.board,
+        answer=result["answer"],
+        model_used=result["model_used"],
+        citations=[
+            {"document": chunk["source"], "page": chunk["page"], "section": chunk["heading"]}
+            for chunk in chunks
+        ],
+    )
     return response
 
 

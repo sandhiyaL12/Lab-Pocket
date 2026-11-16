@@ -131,3 +131,28 @@ def test_invalid_board_is_rejected(client):
         json={"board": "Arduino", "question": "How do I set a pin?"},
     )
     assert response.status_code == 422
+
+
+def test_ask_returns_document_page_citations(client, monkeypatch):
+    monkeypatch.setattr(
+        "app.main.retrieve_chunks",
+        AsyncMock(
+            return_value=[
+                {
+                    "source": "docs/library/machine.Pin.rst",
+                    "page": 2,
+                    "heading": "Methods",
+                    "content": "Use value() to read a pin.",
+                }
+            ]
+        ),
+    )
+    answer = _answer()
+    monkeypatch.setattr("app.main.generate_answer", AsyncMock(return_value=answer))
+
+    response = client.post("/ask", json={"board": "ESP32", "question": "How do I read a pin?"})
+
+    assert response.status_code == 200
+    assert response.json()["citations"] == [
+        {"document": "docs/library/machine.Pin.rst", "page": 2, "section": "Methods"}
+    ]

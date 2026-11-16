@@ -15,16 +15,19 @@ examples, and ports including ESP32 and RP2.
 | Documentation | `docs/` | API and port reference |
 | Tests and examples | `tests/`, `examples/` | Usage examples and implementation checks |
 
-The local corpus contains 5,756 repository files, exceeding the project's
-4,300-file collection target. It also contains 248 reStructuredText (`.rst`)
-documentation pages. Its contents are kept out of Git; a small sample of four
-source/license files is in `data/sample/`. Documentation uses source files and
-headings rather than fixed page numbers. See
-[docs/QUESTIONS.md](docs/QUESTIONS.md) for question-to-source references.
+The local corpus contains 5,756 repository files, including 248 reStructuredText
+(`.rst`) documentation files. Its contents are kept out of Git; a small sample
+of four source/license files is in `data/sample/`. Documentation uses source
+files and headings rather than fixed page numbers. Retrieval therefore cites a
+section's 1-based position within its source file as its page number. Run
+`python -m app.ingest data/raw` after configuring PostgreSQL, pgvector, and an
+embedding endpoint to create the index. See [docs/QUESTIONS.md](docs/QUESTIONS.md)
+for question-to-source references.
 
 MicroPython source files retain their upstream copyright and license notices.
 The upstream license is included as `data/sample/LICENSE`.
 
-**Current scope:** the collected corpus is not yet indexed or connected to
-`POST /chat`. Until retrieval and citations are implemented, LLM answers are
-not source-verified. That work belongs to the next project phase.
+The corpus is not committed to Git. Indexing is an explicit step and requires
+the local source checkout, a running database, and a configured embedding
+service. `POST /ask` uses the resulting index and returns citations; `POST
+/chat` remains a separate non-retrieval endpoint.

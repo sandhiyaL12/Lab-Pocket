@@ -6,12 +6,12 @@ services:
     environment:
       APP_NAME: ${APP_NAME:-Lab-Pocket}
       ENVIRONMENT: ${ENVIRONMENT:-local}
-      PRIMARY_API_KEY: ${PRIMARY_API_KEY:-}
-      PRIMARY_BASE_URL: ${PRIMARY_BASE_URL:-https://api.openai.com/v1}
-      PRIMARY_MODEL: ${PRIMARY_MODEL:-gpt-4o-mini}
-      FALLBACK_API_KEY: ${FALLBACK_API_KEY:-}
-      FALLBACK_BASE_URL: ${FALLBACK_BASE_URL:-https://api.openai.com/v1}
-      FALLBACK_MODEL: ${FALLBACK_MODEL:-}
+      PRIMARY_API_KEY: ${PRIMARY_API_KEY:-${LLM_API_KEY:-}}
+      PRIMARY_BASE_URL: ${PRIMARY_BASE_URL:-${LLM_BASE_URL:-https://api.openai.com/v1}}
+      PRIMARY_MODEL: ${PRIMARY_MODEL:-${LLM_MODEL:-gpt-4o-mini}}
+      FALLBACK_API_KEY: ${FALLBACK_API_KEY:-${LLM_FALLBACK_API_KEY:-}}
+      FALLBACK_BASE_URL: ${FALLBACK_BASE_URL:-${LLM_FALLBACK_BASE_URL:-https://api.openai.com/v1}}
+      FALLBACK_MODEL: ${FALLBACK_MODEL:-${LLM_FALLBACK_MODEL:-}}
       TIMEOUT_SECONDS: ${TIMEOUT_SECONDS:-30}
       LLM_MAX_RETRIES: ${LLM_MAX_RETRIES:-1}
       LLM_RETRY_DELAY_SECONDS: ${LLM_RETRY_DELAY_SECONDS:-0.25}
@@ -21,10 +21,16 @@ services:
       FALLBACK_INPUT_COST_PER_MILLION: ${FALLBACK_INPUT_COST_PER_MILLION:-0}
       FALLBACK_OUTPUT_COST_PER_MILLION: ${FALLBACK_OUTPUT_COST_PER_MILLION:-0}
       COST_LOG_PATH: ${COST_LOG_PATH:-data/cost_log.jsonl}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://labpocket:labpocket-local@db:5432/labpocket}
+      EMBEDDING_API_KEY: ${EMBEDDING_API_KEY:-}
+      EMBEDDING_BASE_URL: ${EMBEDDING_BASE_URL:-}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-text-embedding-3-small}
+      EMBEDDING_DIMENSIONS: ${EMBEDDING_DIMENSIONS:-1536}
     ports:
       - "${PORT:-8000}:8000"
     volumes:
       - api_data:/app/data
+      - ./data/raw:/app/data/raw:ro
     depends_on:
       db:
         condition: service_healthy
